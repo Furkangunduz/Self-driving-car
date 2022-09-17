@@ -12,10 +12,13 @@ class Car {
         this.maxSpeed = 5
         this.friction = 0.05
 
+        this.sensor = new Sensor(this)
         this.controls = new Controls()
     }
 
     draw(ctx) {
+        this.sensor.draw(ctx)
+
         ctx.save()
         ctx.translate(this.x, this.y)
         ctx.rotate(-this.angle)
@@ -28,6 +31,7 @@ class Car {
         )
         ctx.fill()
         ctx.restore()
+
     }
     #move() {
         if (this.controls.forward) {
@@ -65,7 +69,8 @@ class Car {
         this.y += (-Math.cos(this.angle) * this.speed)
     }
 
-    update() {
+    update(roadBorders) {
         this.#move()
+        this.sensor.update(roadBorders)
     }
 }
