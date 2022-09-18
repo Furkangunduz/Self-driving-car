@@ -1,31 +1,40 @@
-const canvas = document.getElementById("myCanvas")
-canvas.height = window.innerHeight
+const carCanvas = document.getElementById("carCanvas")
+const networkCanvas = document.getElementById("networkCanvas")
 
-const ctx = canvas.getContext("2d")
-const road = new Road(canvas.width / 2, canvas.width - 25)
-const car = new Car(road.getLaneCenter(1), 100, 30, 50, "KEYS")
+carCanvas.height = window.innerHeight
+carCanvas.width = 300
+
+networkCanvas.height = window.innerHeight
+networkCanvas.width = 500
+
+const carCtx = carCanvas.getContext("2d")
+const networkCtx = networkCanvas.getContext("2d")
+const road = new Road(carCanvas.width / 2, carCanvas.width - 25)
+const car = new Car(road.getLaneCenter(1), 100, 30, 50, "AI")
 const traffic = [
     new Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 3),
 ]
 
 
-function gameLoop() {
+function gameLoop(time) {
     traffic.forEach((car) => {
         car.update(road.borders, [])
     })
     car.update(road.borders, traffic)
-    canvas.height = window.innerHeight
+    carCanvas.height = window.innerHeight
+    networkCanvas.height = window.innerHeight
 
-    ctx.save()
-    ctx.translate(0, -car.y + canvas.height * 0.7)
-    road.draw(ctx)
+    carCtx.save()
+    carCtx.translate(0, -car.y + carCanvas.height * 0.7)
+    road.draw(carCtx)
     traffic.forEach((car) => {
-        car.draw(ctx, "blue")
+        car.draw(carCtx, "blue")
     })
-    car.draw(ctx, "red")
-    ctx.restore()
+    car.draw(carCtx, "red")
+    carCtx.restore()
 
-
+    networkCtx.lineDashOffset = time / 100
+    Visualizer.drawNetwork(networkCtx, car.brain);
     requestAnimationFrame(gameLoop)
 }
 
