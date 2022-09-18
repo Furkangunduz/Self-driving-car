@@ -7,9 +7,10 @@ carCanvas.width = 300
 networkCanvas.height = window.innerHeight
 networkCanvas.width = 400
 
+const FPS = 60
+const CARSAMOUNT = 100
 const carCtx = carCanvas.getContext("2d")
 const networkCtx = networkCanvas.getContext("2d")
-const CARSAMOUNT = 100
 
 let road = new Road(carCanvas.width / 2, carCanvas.width - 25)
 let roadLaneCenters = getAllLanesCenterCoordinates()
@@ -131,7 +132,7 @@ function gameLoop() {
         carCtx.font = '20px serif';
         carCtx.fillText(`generation : ${generationCount}`, 20, 30);
         carCtx.fillText(`alive : ${alive}`, 20, 70);
-    }, 1000 / 120)
+    }, 1000 / FPS)
 }
 
 gameLoop()
