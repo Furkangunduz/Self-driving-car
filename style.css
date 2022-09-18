@@ -3,6 +3,22 @@ body {
 	background-color: darkgray;
 	overflow: hidden;
 	text-align: center;
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+}
+
+#verticalButtons {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+button {
+	padding: 5px 10px;
+	width: 100%;
+	margin: 5px;
 }
 
 #networkCanvas {

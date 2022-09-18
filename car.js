@@ -27,8 +27,9 @@ class Car {
         this.controls = new Controls(controlType)
     }
 
-    draw(ctx, color) {
-        if (this.sensor) this.sensor.draw(ctx)
+    draw(ctx, color, drawSensor = false) {
+        if (this.sensor && drawSensor) this.sensor.draw(ctx)
+
         if (this.damaged) {
             ctx.fillStyle = "gray"
         } else {
@@ -131,7 +132,6 @@ class Car {
                     s => s == null ? 0 : 1 - s.offset
                 );
                 const outputs = NeuralNetwork.feedForward(offsets, this.brain);
-                console.log(outputs)
 
                 this.controls.forward = outputs[0];
                 this.controls.left = outputs[1];
