@@ -15,6 +15,12 @@ class Car {
         this.friction = 0.05
 
         this.useBrain = false
+        this.controlType = controlType
+
+        //if this value is grater than 50 car will be unsuccesful
+        //bcz trying to teach cars going to center of the lane 
+        this.laneUncenteredTimeCount = 0
+        this.distToCenter = 0
 
         if (controlType != "DUMMY") {
             this.sensor = new Sensor(this)
@@ -26,7 +32,6 @@ class Car {
 
         this.controls = new Controls(controlType)
     }
-
     draw(ctx, color, drawSensor = false) {
         if (this.sensor && drawSensor) this.sensor.draw(ctx)
 
@@ -57,7 +62,6 @@ class Car {
         }
         return false;
     }
-
     #createPolygon() {
         const points = [];
         const rad = Math.hypot(this.width, this.height) / 2;
@@ -80,7 +84,6 @@ class Car {
         });
         return points;
     }
-
     #move() {
         if (this.controls.forward) {
             this.speed += this.acceleration
@@ -117,12 +120,34 @@ class Car {
         this.x += (-Math.sin(this.angle) * this.speed)
         this.y += (-Math.cos(this.angle) * this.speed)
     }
+    #isCentered(roadLaneCenters) {
+        if (roadLaneCenters) {
+            for (let i = 0; i < roadLaneCenters.length; i++) {
+                this.distToCenter = Math.abs(roadLaneCenters[i] - this.x)
+                if (this.distToCenter < 3) {
+                    return true
+                }
+            }
+            return false
+        }
+    }
 
-    update(roadBorders, traffic) {
+    update(roadBorders, traffic, roadLaneCenters) {
         if (!this.damaged) {
             this.#move()
             this.polygon = this.#createPolygon()
             this.damaged = this.#assessDamage(roadBorders, traffic)
+
+            // if (this.controlType !== "DUMMY") {
+            //     if (this.laneUncenteredTimeCount > 700) {
+            //         this.damaged = true
+            //     }
+            //     if (!this.#isCentered(roadLaneCenters)) {
+            //         this.laneUncenteredTimeCount++
+            //     } else {
+            //         this.laneUncenteredTimeCount -= 2
+            //     }
+            // }
         }
         if (this.sensor) {
             this.sensor.update(roadBorders, traffic);
@@ -139,5 +164,6 @@ class Car {
                 this.controls.reverse = outputs[3];
             }
         }
+
     }
 }

@@ -20,18 +20,14 @@ class Road {
             [topLeft, bottomLeft],
             [topRight, bottomRight],
         ]
-
     }
-
     getLaneCenter(laneIndex) {
         const laneWidth = this.width / this.laneCount
         return this.left + ((Math.min(laneIndex, this.laneCount - 1) * laneWidth) + (laneWidth / 2))
     }
-
     draw(ctx) {
         ctx.lineWidth = 5
         ctx.strokeStyle = "white"
-
 
         for (let i = 1; i < this.laneCount; i++) {
             const x = lerp(this.left, this.right, i / this.laneCount)
